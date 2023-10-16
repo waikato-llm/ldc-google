@@ -155,6 +155,10 @@ class GoogleTranslate(Filter):
         :return: the translated text
         :rtype: str
         """
+        # skip empty text
+        if len(s.strip()) == 0:
+            return s
+
         self._count += len(s)
         location = "global"
         parent = f"projects/{self.project_id}/locations/{location}"
