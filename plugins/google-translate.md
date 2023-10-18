@@ -4,7 +4,7 @@
 * accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
 * generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
 
-Translates text using Google's Translate API. The 'project_id' refers to your project ID in the Google Cloud console (http://console.cloud.google.com/). Requires local dev credentials: https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev
+Translates text using Google's Translate API. The 'project_id' refers to your project ID in the Google Cloud console (http://console.cloud.google.com/). The Google Translate API must be enabled. Requires local dev credentials: https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev
 
 ```
 usage: google-translate [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
@@ -13,8 +13,8 @@ usage: google-translate [-h] [-l {DEBUG,INFO,WARN,ERROR,CRITICAL}]
                         [-L {any,instruction,input,output,content}]
 
 Translates text using Google's Translate API. The 'project_id' refers to your
-project ID in the Google Cloud console (http://console.cloud.google.com/).
-Requires local dev credentials:
+project ID in the Google Cloud console (http://console.cloud.google.com/). The
+Google Translate API must be enabled. Requires local dev credentials:
 https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev
 
 optional arguments:
