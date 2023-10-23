@@ -180,7 +180,7 @@ class GoogleTranslate(Filter):
 
         return result
 
-    def process(self, data):
+    def _do_process(self, data):
         """
         Processes the data record.
 
