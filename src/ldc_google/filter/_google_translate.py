@@ -3,7 +3,8 @@ import copy
 from google.cloud import translate
 from typing import List
 
-from ldc.core import LOGGING_WARN, DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
+from wai.logging import LOGGING_WARNING
+from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
     LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
 from ldc.filter import Filter
@@ -25,7 +26,7 @@ class GoogleTranslate(Filter):
     """
 
     def __init__(self, project_id: str = None, source_lang: str = None, target_lang: str = None,
-                 location: str = LOCATION_ANY, logger_name: str = None, logging_level: str = LOGGING_WARN):
+                 location: str = LOCATION_ANY, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter. Either encoding or model need to be provided.
 
