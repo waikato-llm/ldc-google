@@ -9,7 +9,7 @@ Translates text using Google's Translate API. The 'project_id' refers to your pr
 ```
 usage: google-translate [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                         [-N LOGGER_NAME] [-p PROJECT_ID] [-s SOURCE_LANG]
-                        [-t TARGET_LANG]
+                        [-t TARGET_LANG] [--split_lines]
                         [-L {any,instruction,input,output,content}]
 
 Translates text using Google's Translate API. The 'project_id' refers to your
@@ -32,6 +32,9 @@ optional arguments:
   -t TARGET_LANG, --target_lang TARGET_LANG
                         The language to translate the text into. (default:
                         None)
+  --split_lines         Whether to split the text on new lines rather than
+                        presenting it as a single item to translate. (default:
+                        False)
   -L {any,instruction,input,output,content}, --location {any,instruction,input,output,content}
                         Which data use for counting tokens; pairs:
                         any,instruction,input,output, pretrain: any,content,

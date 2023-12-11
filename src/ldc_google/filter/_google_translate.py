@@ -11,6 +11,7 @@ from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
 from ldc.translation import TranslationData
+from ldc.text_utils import remove_empty
 
 
 class GoogleTranslate(Filter):
@@ -26,7 +27,8 @@ class GoogleTranslate(Filter):
     """
 
     def __init__(self, project_id: str = None, source_lang: str = None, target_lang: str = None,
-                 location: str = LOCATION_ANY, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 split_lines: bool = False, location: str = LOCATION_ANY,
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter. Either encoding or model need to be provided.
 
@@ -36,6 +38,8 @@ class GoogleTranslate(Filter):
         :type source_lang: str
         :param target_lang: the language to translate the text into
         :type target_lang: str
+        :param split_lines: whether to split the text on newlines
+        :type split_lines: bool
         :param location: which part of the data to count the tokens
         :type location: str
         :param logger_name: the name to use for the logger
@@ -51,6 +55,7 @@ class GoogleTranslate(Filter):
         self.project_id = project_id
         self.source_lang = source_lang
         self.target_lang = target_lang
+        self.split_lines = split_lines
         self.location = location
         self._client = None
         self._count = 0
@@ -114,6 +119,7 @@ class GoogleTranslate(Filter):
         parser.add_argument("-p", "--project_id", type=str, default=None, help="The name/ID of the Google Cloud project to use.", required=False)
         parser.add_argument("-s", "--source_lang", type=str, default=None, help="The language the incoming text is in.", required=False)
         parser.add_argument("-t", "--target_lang", type=str, default=None, help="The language to translate the text into.", required=False)
+        parser.add_argument("--split_lines", action="store_true", help="Whether to split the text on new lines rather than presenting it as a single item to translate.")
         parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Which data use for counting tokens; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
         return parser
 
@@ -128,6 +134,7 @@ class GoogleTranslate(Filter):
         self.project_id = ns.project_id
         self.source_lang = ns.source_lang
         self.target_lang = ns.target_lang
+        self.split_lines = ns.split_lines
         self.location = ns.location
 
     def initialize(self):
@@ -161,21 +168,27 @@ class GoogleTranslate(Filter):
             return s
 
         self._count += len(s)
+        if self.split_lines:
+            contents = remove_empty(s.split("\n"))
+        else:
+            contents = [s]
         location = "global"
         parent = f"projects/{self.project_id}/locations/{location}"
         response = self._client.translate_text(
             request={
                 "parent": parent,
-                "contents": [s],
+                "contents": contents,
                 "mime_type": "text/plain",
                 "source_language_code": self.source_lang,
                 "target_language_code": self.target_lang,
             }
         )
         result = s
+        translated = []
         for translation in response.translations:
-            result = translation.translated_text
-            break
+            translated.append(translation.translated_text)
+        if len(translated) > 0:
+            result = "\n".join(translated)
 
         self.logger().debug("%s -> %s" % (s, result))
 
