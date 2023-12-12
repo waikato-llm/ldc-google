@@ -1,12 +1,12 @@
 import argparse
 import copy
 from google.cloud import translate
-from typing import List
+from typing import List, Union
 
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN
+    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -27,7 +27,7 @@ class GoogleTranslate(Filter):
     """
 
     def __init__(self, project_id: str = None, source_lang: str = None, target_lang: str = None,
-                 split_lines: bool = False, location: str = LOCATION_ANY,
+                 split_lines: bool = False, location: Union[str, List[str]] = LOCATION_ANY,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the filter. Either encoding or model need to be provided.
@@ -41,7 +41,7 @@ class GoogleTranslate(Filter):
         :param split_lines: whether to split the text on newlines
         :type split_lines: bool
         :param location: which part of the data to count the tokens
-        :type location: str
+        :type location: str or list
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -120,7 +120,7 @@ class GoogleTranslate(Filter):
         parser.add_argument("-s", "--source_lang", type=str, default=None, help="The language the incoming text is in.", required=False)
         parser.add_argument("-t", "--target_lang", type=str, default=None, help="The language to translate the text into.", required=False)
         parser.add_argument("--split_lines", action="store_true", help="Whether to split the text on new lines rather than presenting it as a single item to translate.")
-        parser.add_argument("-L", "--location", choices=LOCATIONS, default=LOCATION_ANY, help="Which data use for counting tokens; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
+        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Which data use for counting tokens; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
@@ -152,6 +152,8 @@ class GoogleTranslate(Filter):
         if self.target_lang is None:
             raise Exception("No language specified in which to translate!")
 
+        if isinstance(self.location, str):
+            self.location = [self.location]
         self._client = translate.TranslationServiceClient()
 
     def _translate(self, s: str) -> str:
@@ -204,14 +206,14 @@ class GoogleTranslate(Filter):
         result = copy.deepcopy(data)
 
         if isinstance(result, PairData):
-            if self.location in [LOCATION_INSTRUCTION, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INSTRUCTION):
                 result.instruction = self._translate(result.instruction)
-            if self.location in [LOCATION_INPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_INPUT):
                 result.input = self._translate(result.input)
-            if self.location in [LOCATION_OUTPUT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_OUTPUT):
                 result.output = self._translate(result.output)
         elif isinstance(result, PretrainData):
-            if self.location in [LOCATION_CONTENT, LOCATION_ANY]:
+            if locations_match(self.location, LOCATION_CONTENT):
                 result.content = self._translate(result.content)
         elif isinstance(result, TranslationData):
             if self.source_lang in result.translations:
