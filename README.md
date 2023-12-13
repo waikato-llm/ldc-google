@@ -11,7 +11,5 @@ pip install git+https://github.com/waikato-llm/ldc-google.git
 
 ## Plugins
 
-Filters:
-
-* [google-translate](plugins/google-translate.md)
+See [here](plugins/README.md) for an overview of all plugins.
 
