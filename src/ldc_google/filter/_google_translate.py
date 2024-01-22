@@ -6,7 +6,7 @@ from typing import List, Union
 from wai.logging import LOGGING_WARNING
 from ldc.core import DOMAIN_PAIRS, DOMAIN_PRETRAIN, DOMAIN_TRANSLATION
 from ldc.core import LOCATION_ANY, LOCATION_INSTRUCTION, LOCATION_INPUT, LOCATION_OUTPUT, LOCATION_CONTENT, \
-    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, locations_match
+    LOCATIONS, LOCATIONS_PAIRS, LOCATIONS_PRETRAIN, LOCATIONS_TRANSLATION, locations_match
 from ldc.filter import Filter
 from ldc.pretrain import PretrainData
 from ldc.supervised.pairs import PairData
@@ -120,7 +120,7 @@ class GoogleTranslate(Filter):
         parser.add_argument("-s", "--source_lang", type=str, default=None, help="The language the incoming text is in.", required=False)
         parser.add_argument("-t", "--target_lang", type=str, default=None, help="The language to translate the text into.", required=False)
         parser.add_argument("--split_lines", action="store_true", help="Whether to split the text on new lines rather than presenting it as a single item to translate.")
-        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Which data use for counting tokens; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_PRETRAIN))
+        parser.add_argument("-L", "--location", choices=LOCATIONS, nargs="*", default=LOCATION_ANY, help="Which data use for counting tokens; pairs: " + ",".join(LOCATIONS_PAIRS) + ", pretrain: " + ",".join(LOCATIONS_PRETRAIN) + ", translation: " + ",".join(LOCATIONS_TRANSLATION))
         return parser
 
     def _apply_args(self, ns: argparse.Namespace):
