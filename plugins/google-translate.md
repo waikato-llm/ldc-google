@@ -1,8 +1,8 @@
 # google-translate
 
 * domain(s): pairs, pretrain, translation
-* accepts: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
-* generates: ldc.supervised.pairs.PairData, ldc.pretrain.PretrainData, ldc.translation.TranslationData
+* accepts: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
+* generates: ldc.api.supervised.pairs.PairData, ldc.api.pretrain.PretrainData, ldc.api.translation.TranslationData
 
 Translates text using Google's Translate API. The 'project_id' refers to your project ID in the Google Cloud console (http://console.cloud.google.com/). The Google Translate API must be enabled. Requires local dev credentials: https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev
 
