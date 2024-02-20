@@ -31,7 +31,7 @@ setup(
     },
     packages=find_namespace_packages(where='src'),
     install_requires=[
-        "llm-dataset-converter>=0.1.0",
+        "llm-dataset-converter>=0.2.0",
         "google-cloud-translate",
     ],
     version="0.0.1",
