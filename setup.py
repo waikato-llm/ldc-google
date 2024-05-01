@@ -38,8 +38,8 @@ setup(
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
     entry_points={
-        "ldc.filters": [
-            "ldc-google-filters1=ldc_google.filter:ldc.api.Filter"
-        ]
+        "class_lister": [
+            "ldc_google=ldc_google.class_lister",
+        ],
     },
 )
