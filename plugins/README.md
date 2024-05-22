@@ -1,3 +1,3 @@
-# llm-dataset-converter plugins
+# ldc-google plugins
 ## Filters
 * [google-translate](google-translate.md)
