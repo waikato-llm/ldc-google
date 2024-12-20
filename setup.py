@@ -13,7 +13,7 @@ def _read(f):
 
 
 setup(
-    name="ldc-google",
+    name="ldc_google",
     description="Python3 library integrating Google services into the llm-dataset-converter library.",
     long_description=(
             _read('DESCRIPTION.rst') + b'\n' +
