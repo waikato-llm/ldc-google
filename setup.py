@@ -32,7 +32,7 @@ setup(
     packages=find_namespace_packages(where='src'),
     install_requires=[
         "llm_dataset_converter>=0.2.1",
-        "google-cloud-translate",
+        "google_cloud_translate",
     ],
     version="0.0.1",
     author='Peter Reutemann',
